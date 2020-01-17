@@ -8,7 +8,7 @@ Keep track of the carry using a variable and simulate digits-by-digits sum start
 
 Each node contains a single digit and the digits are stored in reverse order.
 
-## Algorithm
+### Algorithm
 
 Just like how you would sum two numbers on a piece of paper, we begin by summing the least-significant digits, which is the head of `l1` and `l2`. Since each digit is in the range of `0...9`, summing two digits may "overflow". For example 5+7=12. In this case, we set the current digit to 2 and bring over the `carry = 1` to the next iteration. `carry` must be either 0 or 1 because the largest possible sum of two digits (including the carry) is 9+9+1=19.
 
@@ -39,6 +39,32 @@ Take extra caution of the following cases:
 
 `l1=[9,9]`, `l2=[1]`
 * The sum could have an extra carry of one at the end, which is easy to forget.
+
+
+### Solution
+
+```python
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        carry = 0
+        dummy, p, q = ListNode(0), l1, l2
+
+        cur = dummy
+        while p or q:
+            x = p.val if p else 0
+            y = q.val if q else 0
+            s = x + y + carry
+            carry = 0 if s < 10 else 1
+            cur.next = ListNode(s % 10)
+            p = p.next if p else p
+            q = q.next if q else q
+            cur = cur.next
+
+        if carry > 0:
+            cur.next = ListNode(carry)
+
+        return dummy.next
+```
 
 ### Complexity Analysis
 
